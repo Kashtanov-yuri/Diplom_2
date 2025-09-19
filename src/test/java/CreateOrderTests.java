@@ -147,7 +147,6 @@ public class CreateOrderTests {
         userEmail = UserClient.generateUniqueEmail();
         userPassword = "password";
         userName = "Test User";
-
         UserClient.createUser(userEmail, userPassword, userName);
 
         Response loginResponse = UserClient.login(userEmail, userPassword);

@@ -40,14 +40,10 @@ public class UserTests {
         userName = "Username";
 
         UserClient.createUser(userEmail, userPassword, userName);
-
-        // Логинимся и получаем токен
         Response loginResponse = UserClient.login(userEmail, userPassword);
         accessToken = loginResponse.then()
                 .extract()
                 .path("accessToken");
-
-        // Проверяем успешный логин (оставляем как было)
         loginResponse.then()
                 .statusCode(200)
                 .body("success", equalTo(true))
@@ -64,20 +60,15 @@ public class UserTests {
     @Test
     @Description("Логин с неверным паролем")
     public void loginWithWrongPasswordShouldReturnError() {
-        // Создаем пользователя
         userEmail = UserClient.generateUniqueEmail();
         userPassword = "correctpassword";
         userName = "Username";
 
         UserClient.createUser(userEmail, userPassword, userName);
-
-        // Получаем токен для очистки после теста
         Response loginResponse = UserClient.login(userEmail, userPassword);
         accessToken = loginResponse.then()
                 .extract()
                 .path("accessToken");
-
-        // Пытаемся логиниться с неправильным паролем
         loginWithInvalidCredentialsAndVerifyError(userEmail, "wrongpassword");
     }
 
@@ -87,8 +78,6 @@ public class UserTests {
         userEmail = UserClient.generateUniqueEmail();
         userPassword = "password";
         userName = "Username";
-
-        // Первое создание - успешно
         Response firstResponse = UserClient.createUser(userEmail, userPassword, userName);
         accessToken = firstResponse.then()
                 .extract()
@@ -96,8 +85,6 @@ public class UserTests {
 
         firstResponse.then()
                 .statusCode(200);
-
-        // Второе создание - ошибка
         UserClient.createUser(userEmail, userPassword, userName)
                 .then()
                 .statusCode(403);
